@@ -48,6 +48,7 @@ defmodule FoodTruckInfoService.MixProject do
       {:nimble_csv, "~> 1.2"},
       {:skooma, "~> 0.2.0"},
       {:geocalc, "~> 0.8.5"},
+      {:credo, "~> 1.5", only: [:dev, :test], runtime: false},
       {:plug_cowboy, "~> 2.5"}
     ]
   end
