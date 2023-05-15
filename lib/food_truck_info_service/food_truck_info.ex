@@ -1,6 +1,10 @@
 defmodule FoodTruckInfoService.FoodTruckInfo do
   import Geocalc
 
+  @default_limit "50"
+  @default_radius "5"
+  @status_approved "APPROVED"
+
   defstruct [
     :address,
     :facility_type,
@@ -29,19 +33,19 @@ defmodule FoodTruckInfoService.FoodTruckInfo do
   def get_data(options) do
     data =
       data_stream()
-      |> filter_approved_food_truck()
+      |> filter_approved_food_truck
       |> filter_by_food_item(options[:food_type])
       |> Enum.map(fn item -> convert_to_struct(item) end)
       |> filter_and_sort_near_by(options)
 
     case options[:limit] do
-      nil -> {:ok, data}
+      nil -> {:ok, Enum.take(data, String.to_integer(@default_limit))}
       _ -> {:ok, Enum.take(data, String.to_integer(options.limit))}
     end
   end
 
   defp filter_approved_food_truck(list) do
-    Enum.filter(list, fn list -> list["Status"] == "APPROVED" end)
+    Enum.filter(list, fn list -> list["Status"] == @status_approved end)
   end
 
   defp filter_and_sort_near_by(list, %{latitude: 0, longitude: 0}), do: list
@@ -52,6 +56,7 @@ defmodule FoodTruckInfoService.FoodTruckInfo do
 
     list
     |> Enum.filter(fn food_truck ->
+      # converted to meter
       get_distance(latitude, longitude, food_truck.location) <= radius * 1609
     end)
     |> Enum.sort_by(fn food_truck -> get_distance(latitude, longitude, food_truck.location) end)
