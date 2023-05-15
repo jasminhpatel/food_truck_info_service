@@ -101,6 +101,15 @@ Example Response:
 
 
 
+## Next Step
+Additional functionality could be added to the project in the future.
+
+- Implement a user interface that allows users to search for food trucks using various parameters. Display the search results on a map view with markers indicating the locations of each food truck. Upon hovering or clicking on a particular food truck marker, additional information about the food truck should be displayed.
+- Find real distance between user and food_truck by Map provider API (Ex. Google Map)
+- Sort list of food truck from realtime distance 
+- Add more unit tests to cover all possible scenarios
+
+
 ## Contributing
 
 We use the following tools to ensure constantly high quality of code
