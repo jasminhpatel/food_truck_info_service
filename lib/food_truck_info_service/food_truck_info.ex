@@ -14,7 +14,10 @@ defmodule FoodTruckInfoService.FoodTruckInfo do
   defp data_stream() do
     NimbleCSV.define(MyParser, separator: ",", escape: "\"")
 
-    "./priv/data/food_truck.csv"
+    file_path =
+      Application.get_env(:food_truck_info_service, :csv_file_path, "./priv/data/food_truck.csv")
+
+    file_path
     |> File.stream!()
     |> MyParser.parse_stream(skip_headers: false)
     |> Stream.transform(nil, fn
@@ -71,7 +74,7 @@ defmodule FoodTruckInfoService.FoodTruckInfo do
     end)
   end
 
-  defp convert_to_struct(item = %{}) do
+  defp convert_to_struct(%{} = item) do
     latitude = if item["Latitude"] == "0", do: 0.0, else: String.to_float(item["Latitude"])
     longitude = if item["Longitude"] == "0", do: 0.0, else: String.to_float(item["Longitude"])
 
